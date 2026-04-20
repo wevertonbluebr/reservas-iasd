@@ -33,7 +33,7 @@
     min-height: 100vh;
     overflow-x: hidden;
   }
- 
+
   /* ── BACKGROUND ATMOSPHERE ── */
   body::before {
     content: '';
@@ -1203,7 +1203,7 @@ async function submitReserva() {
 👥 *Pessoas:* ${pessoas || '—'}
 💬 *Obs:* ${obs || '—'}
 ━━━━━━━━━━━━━━━━━━━━
-🔗 *Gerenciar:* https://seusite.github.io/reservas-iasd/aprovar.html?id=${id}`;
+🔗 *Gerenciar:* https://wevertonbluebr.github.io/reservas-iasd/aprovar.html?id=${id}`;
 
   const waUrl = `https://wa.me/${CONFIG.ADMIN_WHATSAPP}?text=${encodeURIComponent(msg)}`;
   window.open(waUrl, '_blank');
