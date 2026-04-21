@@ -598,8 +598,8 @@
 //  CONFIG
 // ═══════════════════════════════════════
 const CONFIG = {
-  JSONBIN_API_KEY: "$2a$10$PLACEHOLDER_JSONBIN_KEY",
-  BIN_ID: "PLACEHOLDER_BIN_ID",
+  JSONBIN_API_KEY: "$2a$10$rk/PQlM0U7FBrOFck5AneuNGenTBDYKWLUkxGct4ocJOFrvNvGAnS",
+  BIN_ID: "69e699a8aaba8821971d74e8",
   ADMIN_WHATSAPP: "5511970148615",
 };
 
@@ -691,7 +691,7 @@ function getFixedForWeek(weekStart) {
 async function loadReservas(){
   showLoading(true);
   try{
-    if(CONFIG.BIN_ID==="PLACEHOLDER_BIN_ID"){ allReservas=[]; }
+    if(CONFIG.BIN_ID==="69e699a8aaba8821971d74e8"){ allReservas=[]; }
     else{
       const res=await fetch(`https://api.jsonbin.io/v3/b/${CONFIG.BIN_ID}/latest`,{headers:{"X-Master-Key":CONFIG.JSONBIN_API_KEY}});
       const json=await res.json();
@@ -702,7 +702,7 @@ async function loadReservas(){
   showLoading(false);
 }
 async function saveReservas(){
-  if(CONFIG.BIN_ID==="PLACEHOLDER_BIN_ID") return true;
+  if(CONFIG.BIN_ID==="69e699a8aaba8821971d74e8") return true;
   try{
     await fetch(`https://api.jsonbin.io/v3/b/${CONFIG.BIN_ID}`,{method:"PUT",headers:{"Content-Type":"application/json","X-Master-Key":CONFIG.JSONBIN_API_KEY},body:JSON.stringify({reservas:allReservas})});
     return true;
@@ -869,19 +869,8 @@ async function submitReserva(){
   renderAll(); closeModal();
   ["f_nome","f_fone","f_dept","f_ativ","f_espaco","f_data","f_inicio","f_fim","f_pessoas","f_obs"].forEach(x=>{document.getElementById(x).value="";});
   const dataFmt=formatDate(data);
-  const msg=`🏛️ *NOVA SOLICITAÇÃO DE RESERVA*
-━━━━━━━━━━━━━━━━━━━━
-👤 *Solicitante:* ${nome}
-📱 *WhatsApp:* ${fone}
-👥 *Departamento:* ${dept}
-🎯 *Atividade:* ${ativ}
-📍 *Espaço:* ${espaco}
-📅 *Data:* ${dataFmt}
-⏰ *Horário:* ${inicio} às ${fim}
-👥 *Pessoas:* ${pessoas||"—"}
-💬 *Obs:* ${obs||"—"}
-━━━━━━━━━━━━━━━━━━━━
-🔗 *Gerenciar:* https://wevertonbluebr.github.io/reservas-iasd/aprovar.html?id=${id}`;
+  const eI="\uD83C\uDFDB\uFE0F",ePe="\uD83D\uDC64",eFo="\uD83D\uDCF1",eGr="\uD83D\uDC65",eAl="\uD83C\uDFAF",ePin="\uD83D\uDCCD",eCal="\uD83D\uDCC5",eRe="\u23F0",eBal="\uD83D\uDCAC",eLi="\uD83D\uDD17",eLn="\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501";
+  const msg=eI+" *NOVA SOLICITACAO DE RESERVA*\n"+eLn+"\n"+ePe+" *Solicitante:* "+nome+"\n"+eFo+" *WhatsApp:* "+fone+"\n"+eGr+" *Departamento:* "+dept+"\n"+eAl+" *Atividade:* "+ativ+"\n"+ePin+" *Espaco:* "+espaco+"\n"+eCal+" *Data:* "+dataFmt+"\n"+eRe+" *Horario:* "+inicio+" as "+fim+"\n"+eGr+" *Pessoas:* "+(pessoas||"-")+"\n"+eBal+" *Obs:* "+(obs||"-")+"\n"+eLn+"\n"+eLi+" *Gerenciar:* https://wevertonbluebr.github.io/reservas-iasd/aprovar.html?id="+id;
   window.open(`https://wa.me/${CONFIG.ADMIN_WHATSAPP}?text=${encodeURIComponent(msg)}`,"_blank");
   showToast("success","⏳ Pré-reservado!","Solicitação enviada para aprovação. Aguarde o retorno da secretaria via WhatsApp.");
 }
