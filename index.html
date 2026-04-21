@@ -869,8 +869,7 @@ async function submitReserva(){
   renderAll(); closeModal();
   ["f_nome","f_fone","f_dept","f_ativ","f_espaco","f_data","f_inicio","f_fim","f_pessoas","f_obs"].forEach(x=>{document.getElementById(x).value="";});
   const dataFmt=formatDate(data);
-  const eI="\uD83C\uDFDB\uFE0F",ePe="\uD83D\uDC64",eFo="\uD83D\uDCF1",eGr="\uD83D\uDC65",eAl="\uD83C\uDFAF",ePin="\uD83D\uDCCD",eCal="\uD83D\uDCC5",eRe="\u23F0",eBal="\uD83D\uDCAC",eLi="\uD83D\uDD17",eLn="\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501";
-  const msg=eI+" *NOVA SOLICITACAO DE RESERVA*\n"+eLn+"\n"+ePe+" *Solicitante:* "+nome+"\n"+eFo+" *WhatsApp:* "+fone+"\n"+eGr+" *Departamento:* "+dept+"\n"+eAl+" *Atividade:* "+ativ+"\n"+ePin+" *Espaco:* "+espaco+"\n"+eCal+" *Data:* "+dataFmt+"\n"+eRe+" *Horario:* "+inicio+" as "+fim+"\n"+eGr+" *Pessoas:* "+(pessoas||"-")+"\n"+eBal+" *Obs:* "+(obs||"-")+"\n"+eLn+"\n"+eLi+" *Gerenciar:* https://wevertonbluebr.github.io/reservas-iasd/aprovar.html?id="+id;
+  const msg="*IASD Granja Viana* - NOVA SOLICITACAO DE RESERVA*\n--------------------\nSolicitante: "+nome+"\nWhatsApp: "+fone+"\nDepartamento: "+dept+"\nAtividade: "+ativ+"\nEspaco: "+espaco+"\nData: "+dataFmt+"\nHorario: "+inicio+" as "+fim+"\nPessoas: "+(pessoas||"-")+"\nObs: "+(obs||"-")+"\n--------------------\nGerenciar: https://wevertonbluebr.github.io/reservas-iasd/aprovar.html?id="+id;
   window.open(`https://wa.me/${CONFIG.ADMIN_WHATSAPP}?text=${encodeURIComponent(msg)}`,"_blank");
   showToast("success","⏳ Pré-reservado!","Solicitação enviada para aprovação. Aguarde o retorno da secretaria via WhatsApp.");
 }
