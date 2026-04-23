@@ -341,8 +341,6 @@
 //  CONFIG
 // ═══════════════════════════════════════════════
 const CONFIG = {
-  JSONBIN_API_KEY: "$2a$10$rk/PQlM0U7FBrOFck5AneuNGenTBDYKWLUkxGct4ocJOFrvNvGAnS",
-  BIN_ID: "69e699a8aaba8821971d74e8",
   ADMIN_PASS: "2803"
 };
 
@@ -405,44 +403,31 @@ function checkAuth() {
 }
 
 // ═══════════════════════════════════════════════
-//  JSONBIN
 // ═══════════════════════════════════════════════
 async function loadReservas() {
-  if (CONFIG.BIN_ID === "69e699a8aaba8821971d74e8") {
-    // Modo demo: simula reserva pendente
-    allReservas = [{
-      id: getParam("id") || "demo_001",
-      tipo: "dynamic", status: "pending",
-      nome: "João da Silva", fone: "11999999999",
-      dept: "🎵 Música", ativ: "🎶 Ensaio — Coral",
-      espaco: "nave", espacoLabel: "⛪ Nave da Igreja",
-      data: new Date().toISOString().slice(0,10),
-      inicio: "15:00", fim: "17:00",
-      pessoas: "30", obs: "Ensaio para o cantata",
-      criadoEm: new Date().toISOString()
-    }];
+  if (CONFIG.BIN_ID === "PLACEHOLDER_BIN_ID") {
+    allReservas = getDemoData();
     return;
   }
-  const res = await fetch(`https://api.jsonbin.io/v3/b/${CONFIG.BIN_ID}/latest`, {
-    headers: { "X-Master-Key": CONFIG.JSONBIN_API_KEY }
-  });
+  const res = await fetch("https://script.google.com/macros/s/AKfycbykDKCav1L4ZNrtCHVe5o3II56c0_rCiQuef7h2nS0tVTqbbgcku96S717pMib8ifyk/exec?action=load");
+  const json = await res.json();
+  allReservas = json.reservas || [];
+}
+  const res = await fetch("https://script.google.com/macros/s/AKfycbykDKCav1L4ZNrtCHVe5o3II56c0_rCiQuef7h2nS0tVTqbbgcku96S717pMib8ifyk/exec?action=load");
   const json = await res.json();
   allReservas = json.record?.reservas || [];
 }
 
 async function saveReservas() {
-  if (CONFIG.BIN_ID === "69e699a8aaba8821971d74e8") return true;
   try {
-    await fetch(`https://api.jsonbin.io/v3/b/${CONFIG.BIN_ID}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Master-Key": CONFIG.JSONBIN_API_KEY
-      },
-      body: JSON.stringify({ reservas: allReservas })
+    await fetch("https://script.google.com/macros/s/AKfycbykDKCav1L4ZNrtCHVe5o3II56c0_rCiQuef7h2nS0tVTqbbgcku96S717pMib8ifyk/exec?action=save", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({reservas: allReservas})
     });
     return true;
   } catch(e) { return false; }
+} catch(e) { return false; }
 }
 
 // ═══════════════════════════════════════════════

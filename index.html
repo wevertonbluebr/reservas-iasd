@@ -598,8 +598,6 @@
 //  CONFIG
 // ═══════════════════════════════════════
 const CONFIG = {
-  JSONBIN_API_KEY: "$2a$10$rk/PQlM0U7FBrOFck5AneuNGenTBDYKWLUkxGct4ocJOFrvNvGAnS",
-  BIN_ID: "69e699a8aaba8821971d74e8",
   ADMIN_WHATSAPP: "5511970148615",
 };
 
@@ -686,25 +684,23 @@ function getFixedForWeek(weekStart) {
 }
 
 // ═══════════════════════════════════════
-//  JSONBIN
 // ═══════════════════════════════════════
 async function loadReservas(){
   showLoading(true);
   try{
-    if(CONFIG.BIN_ID==="69e699a8aaba8821971d74e8"){ allReservas=[]; }
-    else{
-      const res=await fetch(`https://api.jsonbin.io/v3/b/${CONFIG.BIN_ID}/latest`,{headers:{"X-Master-Key":CONFIG.JSONBIN_API_KEY}});
-      const json=await res.json();
-      allReservas=json.record?.reservas||[];
-    }
+    const res=await fetch("https://script.google.com/macros/s/AKfycbykDKCav1L4ZNrtCHVe5o3II56c0_rCiQuef7h2nS0tVTqbbgcku96S717pMib8ifyk/exec?action=load");
+    const json=await res.json();
+    allReservas=json.reservas||[];
   }catch(e){ allReservas=[]; }
   renderAll();
   showLoading(false);
 }
 async function saveReservas(){
-  if(CONFIG.BIN_ID==="69e699a8aaba8821971d74e8") return true;
   try{
-    await fetch(`https://api.jsonbin.io/v3/b/${CONFIG.BIN_ID}`,{method:"PUT",headers:{"Content-Type":"application/json","X-Master-Key":CONFIG.JSONBIN_API_KEY},body:JSON.stringify({reservas:allReservas})});
+    await fetch("https://script.google.com/macros/s/AKfycbykDKCav1L4ZNrtCHVe5o3II56c0_rCiQuef7h2nS0tVTqbbgcku96S717pMib8ifyk/exec?action=save",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({reservas:allReservas})});
+    return true;
+  }catch(e){return false;}
+}`,{method:"PUT",headers:{"Content-Type":"application/json","X-Master-Key":CONFIG.JSONBIN_API_KEY},body:JSON.stringify({reservas:allReservas})});
     return true;
   }catch(e){return false;}
 }
