@@ -6,903 +6,469 @@
 <title>Reservas — IASD Granja Viana</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg:        #080810;
-    --surface:   #10101e;
-    --card:      #16162a;
-    --border:    #2a2a45;
-    --purple:    #7c3aed;
-    --purple-l:  #9d5cf6;
-    --purple-d:  #5b21b6;
-    --green:     #10b981;
-    --amber:     #f59e0b;
-    --red:       #ef4444;
-    --blue:      #3b82f6;
-    --text:      #e8e8f0;
-    --text-muted:#8888aa;
-    --text-dim:  #55556a;
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: "Nunito", sans-serif;
-    background: var(--bg); color: var(--text);
-    min-height: 100vh; overflow-x: hidden;
-  }
-  body::before {
-    content: "";
-    position: fixed; inset: 0;
-    background:
-      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(124,58,237,0.18) 0%, transparent 60%),
-      radial-gradient(ellipse 40% 30% at 90% 90%, rgba(59,130,246,0.08) 0%, transparent 50%);
-    pointer-events: none; z-index: 0;
-  }
-
-  /* ══ HEADER ══ */
-  header {
-    position: relative; z-index: 10;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 32px;
-    background: rgba(16,16,30,0.9);
-    backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--border);
-    box-shadow: 0 4px 32px rgba(0,0,0,0.4);
-  }
-  .header-brand { display: flex; align-items: center; gap: 14px; }
-  .header-icon {
-    width: 46px; height: 46px; border-radius: 12px;
-    background: linear-gradient(135deg, var(--purple-d), var(--purple));
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.5rem;
-    box-shadow: 0 0 18px rgba(124,58,237,0.4);
-    flex-shrink: 0;
-  }
-  .header-titles h1 {
-    font-family: "Cinzel", serif;
-    font-size: 1.1rem; font-weight: 700; color: #fff;
-    letter-spacing: 0.04em; line-height: 1.1;
-  }
-  .header-titles p { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 2px; }
-  .header-actions { display: flex; align-items: center; gap: 10px; }
-
-  /* ══ BOTÕES ══ */
-  .btn {
-    display: inline-flex; align-items: center; gap: 7px;
-    padding: 9px 18px; border-radius: 10px;
-    font-family: "Nunito", sans-serif;
-    font-size: 0.875rem; font-weight: 700;
-    cursor: pointer; border: none; transition: all 0.2s;
-    text-decoration: none;
-  }
-  .btn-primary {
-    background: linear-gradient(135deg, var(--purple), var(--purple-d));
-    color: #fff; box-shadow: 0 4px 18px rgba(124,58,237,0.4);
-  }
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(124,58,237,0.55); }
-  .btn-ghost {
-    background: rgba(255,255,255,0.05); color: var(--text-muted);
-    border: 1px solid var(--border);
-  }
-  .btn-ghost:hover { background: rgba(255,255,255,0.1); color: var(--text); }
-  .btn-admin {
-    background: rgba(124,58,237,0.12); color: var(--purple-l);
-    border: 1px solid rgba(124,58,237,0.3);
-  }
-  .btn-admin:hover { background: rgba(124,58,237,0.22); }
-
-  /* ══ LEGENDA ══ */
-  .legend {
-    position: relative; z-index: 5;
-    display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
-    padding: 10px 32px;
-    background: rgba(16,16,30,0.6);
-    border-bottom: 1px solid var(--border);
-    font-size: 0.77rem; color: var(--text-muted);
-  }
-  .legend-item { display: flex; align-items: center; gap: 6px; }
-  .legend-dot { width: 10px; height: 10px; border-radius: 3px; }
-
-  /* ══ WEEK NAV ══ */
-  .week-nav {
-    position: relative; z-index: 5;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 32px;
-  }
-  .week-label {
-    font-family: "Cinzel", serif;
-    font-size: 1rem; font-weight: 600; color: var(--text);
-  }
-  .week-controls { display: flex; gap: 8px; align-items: center; }
-  .btn-nav {
-    width: 34px; height: 34px;
-    display: flex; align-items: center; justify-content: center;
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 8px; cursor: pointer; color: var(--text-muted);
-    font-size: 0.9rem; transition: all 0.2s;
-  }
-  .btn-nav:hover { border-color: var(--purple); color: var(--purple-l); }
-  .btn-today {
-    padding: 7px 14px; border-radius: 8px;
-    background: var(--card); border: 1px solid var(--border);
-    color: var(--text-muted); font-family: "Nunito", sans-serif;
-    font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
-  }
-  .btn-today:hover { border-color: var(--purple); color: var(--purple-l); }
-
-  /* ══════════════════════════════════════════
-     DESKTOP: CALENDÁRIO GRID (>= 700px)
-  ══════════════════════════════════════════ */
-  .view-desktop { display: block; }
-  .view-mobile  { display: none; }
-
-  .calendar-wrap { position: relative; z-index: 5; padding: 0 32px 32px; }
-  .calendar {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 16px; overflow: hidden;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
-  }
-
-  /* Header dos dias */
-  .cal-header {
-    display: grid;
-    grid-template-columns: 150px repeat(7, 1fr);
-    border-bottom: 1px solid var(--border);
-  }
-  .cal-header-cell {
-    padding: 14px 8px; text-align: center;
-    font-size: 0.75rem; font-weight: 700;
-    letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--text-muted);
-    border-right: 1px solid var(--border);
-  }
-  .cal-header-cell:last-child { border-right: none; }
-  .cal-header-cell.today-col { color: var(--purple-l); }
-  .cal-header-cell .day-num {
-    display: block; font-family: "Cinzel", serif;
-    font-size: 1.1rem; font-weight: 700; color: var(--text); margin-top: 2px;
-  }
-  .cal-header-cell.today-col .day-num {
-    background: var(--purple); color: #fff;
-    width: 32px; height: 32px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    margin: 4px auto 0;
-    box-shadow: 0 0 14px rgba(124,58,237,0.5);
-  }
-
-  /* Linhas de espaço */
-  .cal-row {
-    display: grid;
-    grid-template-columns: 150px repeat(7, 1fr);
-    border-bottom: 1px solid var(--border);
-    min-height: 82px;
-  }
-  .cal-row:last-child { border-bottom: none; }
-  .cal-space-label {
-    display: flex; align-items: center; gap: 8px;
-    padding: 12px 14px;
-    border-right: 1px solid var(--border);
-    font-size: 0.8rem; font-weight: 700; color: var(--text-muted);
-    background: rgba(0,0,0,0.15);
-  }
-  .cal-cell {
-    padding: 5px 4px;
-    border-right: 1px solid var(--border);
-    display: flex; flex-direction: column; gap: 4px;
-    min-height: 82px; transition: background 0.15s;
-  }
-  .cal-cell:last-child { border-right: none; }
-  .cal-cell:hover { background: rgba(124,58,237,0.04); }
-
-  /* Blocos de reserva */
-  .res-block {
-    border-radius: 7px; padding: 5px 7px;
-    font-size: 0.71rem; line-height: 1.3;
-    cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
-    border-left: 3px solid transparent;
-  }
-  .res-block:hover { transform: scale(1.03); box-shadow: 0 4px 12px rgba(0,0,0,0.4); z-index: 2; position: relative; }
-  .res-block.status-fixed    { background: rgba(124,58,237,0.15); border-left-color: var(--purple);  color: #c4b5fd; }
-  .res-block.status-approved { background: rgba(16,185,129,0.15);  border-left-color: var(--green);   color: #6ee7b7; }
-  .res-block.status-pending  { background: rgba(245,158,11,0.15);  border-left-color: var(--amber);   color: #fcd34d; }
-  .res-block.status-rejected { background: rgba(239,68,68,0.1);    border-left-color: var(--red);     color: #fca5a5; opacity:0.6; }
-  .res-block .res-time  { font-weight: 800; font-size: 0.66rem; opacity: 0.85; display: block; margin-bottom: 1px; }
-  .res-block .res-name  { font-weight: 700; font-size: 0.71rem; display: block; }
-  .res-block .res-dept  { font-size: 0.64rem; opacity: 0.7; display: block; }
-  .empty-cell {
-    display: flex; align-items: center; justify-content: center;
-    height: 100%; min-height: 70px;
-    color: var(--text-dim); font-size: 0.7rem;
-  }
-
-  /* ══════════════════════════════════════════
-     MOBILE: LISTA POR DIA (< 700px)
-  ══════════════════════════════════════════ */
-  /* Abas de filtro mobile */
-  .mobile-filter-tabs {
-    display: flex; gap: 7px; overflow-x: auto;
-    padding: 10px 14px 0; scrollbar-width: none;
-  }
-  .mobile-filter-tabs::-webkit-scrollbar { display: none; }
-  .mf-tab {
-    white-space: nowrap; padding: 6px 13px; border-radius: 20px;
-    background: var(--card); border: 1px solid var(--border);
-    color: var(--text-muted); font-family: "Nunito", sans-serif;
-    font-size: 0.76rem; font-weight: 700; cursor: pointer; flex-shrink: 0;
-    transition: all 0.2s;
-  }
-  .mf-tab.active { background: rgba(124,58,237,0.2); border-color: var(--purple); color: var(--purple-l); }
-
-  /* Lista de dias */
-  .mobile-list { padding: 10px 12px 28px; display: flex; flex-direction: column; gap: 12px; }
-  .mobile-day-card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 14px; overflow: hidden;
-  }
-  .mobile-day-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 10px 14px;
-    background: rgba(0,0,0,0.2);
-    border-bottom: 1px solid var(--border);
-  }
-  .mobile-day-name { font-size: 0.78rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; }
-  .mobile-day-num  {
-    font-family: "Cinzel", serif; font-size: 0.9rem; font-weight: 700; color: var(--text);
-  }
-  .mobile-day-num.is-today {
-    background: var(--purple); color: #fff;
-    padding: 2px 9px; border-radius: 12px;
-    box-shadow: 0 0 10px rgba(124,58,237,0.45);
-  }
-  .mobile-res-item {
-    display: flex; align-items: flex-start; gap: 10px;
-    padding: 11px 14px; border-bottom: 1px solid rgba(42,42,69,0.5);
-    cursor: pointer; transition: background 0.15s;
-  }
-  .mobile-res-item:last-child { border-bottom: none; }
-  .mobile-res-item:hover { background: rgba(124,58,237,0.05); }
-  .mobile-res-stripe {
-    width: 4px; min-height: 40px; border-radius: 2px; flex-shrink: 0; margin-top: 2px;
-  }
-  .stripe-fixed    { background: var(--purple); }
-  .stripe-approved { background: var(--green); }
-  .stripe-pending  { background: var(--amber); }
-  .stripe-rejected { background: var(--red); opacity: 0.5; }
-  .mobile-res-info { flex: 1; min-width: 0; }
-  .mobile-res-name { font-size: 0.85rem; font-weight: 800; color: var(--text); }
-  .mobile-res-meta { font-size: 0.73rem; color: var(--text-muted); margin-top: 3px; display: flex; flex-direction: column; gap: 2px; }
-  .mobile-res-badge {
-    display: inline-flex; align-items: center;
-    padding: 2px 8px; border-radius: 10px;
-    font-size: 0.65rem; font-weight: 800; margin-top: 4px;
-  }
-  .badge-fixed    { background: rgba(124,58,237,0.15); color: var(--purple-l); }
-  .badge-approved { background: rgba(16,185,129,0.15);  color: var(--green); }
-  .badge-pending  { background: rgba(245,158,11,0.15);  color: var(--amber); }
-  .badge-rejected { background: rgba(239,68,68,0.1);    color: var(--red); }
-  .mobile-empty {
-    padding: 16px 14px; text-align: center;
-    font-size: 0.78rem; color: var(--text-dim);
-  }
-
-  /* ══ MODAL SOLICITAR ══ */
-  .modal-overlay {
-    display: none; position: fixed; inset: 0; z-index: 1000;
-    background: rgba(0,0,0,0.75); backdrop-filter: blur(6px);
-    align-items: center; justify-content: center; padding: 20px;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 20px; width: 100%; max-width: 580px;
-    max-height: 90vh; overflow-y: auto;
-    box-shadow: 0 24px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(124,58,237,0.2);
-    animation: modalIn 0.25s ease;
-  }
-  @keyframes modalIn { from{opacity:0;transform:scale(0.95) translateY(20px)} to{opacity:1;transform:scale(1) translateY(0)} }
-  .modal-header {
-    padding: 22px 26px 18px; border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .modal-header h2 { font-family: "Cinzel", serif; font-size: 1.05rem; font-weight: 700; color: #fff; }
-  .modal-header p  { font-size: 0.78rem; color: var(--text-muted); margin-top: 3px; }
-  .modal-close {
-    width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
-    background: rgba(255,255,255,0.06); border: 1px solid var(--border);
-    border-radius: 8px; cursor: pointer; color: var(--text-muted); font-size: 1rem; transition: all 0.2s;
-  }
-  .modal-close:hover { background: rgba(239,68,68,0.15); color: var(--red); border-color: var(--red); }
-  .modal-body { padding: 22px 26px; }
-  .modal-footer {
-    padding: 18px 26px 22px; border-top: 1px solid var(--border);
-    display: flex; gap: 10px; justify-content: flex-end;
-  }
-
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  .form-grid .full { grid-column: 1 / -1; }
-  .form-group { display: flex; flex-direction: column; gap: 6px; }
-  .form-group label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
-  .form-group input, .form-group select, .form-group textarea {
-    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
-    padding: 10px 13px; color: var(--text);
-    font-family: "Nunito", sans-serif; font-size: 0.88rem;
-    outline: none; transition: border-color 0.2s, box-shadow 0.2s; width: 100%;
-  }
-  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-    border-color: var(--purple); box-shadow: 0 0 0 3px rgba(124,58,237,0.15);
-  }
-  .form-group select option { background: var(--card); }
-  .form-group textarea { resize: vertical; min-height: 76px; }
-
-  .conflict-alert {
-    display: none; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.4);
-    border-radius: 10px; padding: 11px 15px; margin-top: 14px;
-    color: #fca5a5; font-size: 0.84rem; line-height: 1.5;
-  }
-  .conflict-alert.show { display: block; }
-
-  /* ══ DETAIL MODAL ══ */
-  .detail-row { display: flex; gap: 10px; margin-bottom: 11px; padding-bottom: 11px; border-bottom: 1px solid var(--border); }
-  .detail-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-  .detail-icon { font-size: 1.1rem; width: 26px; flex-shrink: 0; }
-  .detail-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; }
-  .detail-val   { font-size: 0.9rem; color: var(--text); font-weight: 600; margin-top: 1px; }
-  .status-badge {
-    display: inline-flex; align-items: center; gap: 5px;
-    padding: 4px 11px; border-radius: 20px; font-size: 0.75rem; font-weight: 800;
-  }
-  .sb-approved { background: rgba(16,185,129,0.15); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
-  .sb-pending  { background: rgba(245,158,11,0.15);  color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
-  .sb-fixed    { background: rgba(124,58,237,0.15);  color: var(--purple-l); border: 1px solid rgba(124,58,237,0.3); }
-
-  /* ══ TOAST ══ */
-  .toast {
-    display: none; position: fixed; bottom: 26px; right: 26px; z-index: 2000;
-    background: var(--card); border: 1px solid var(--border); border-radius: 13px;
-    padding: 14px 20px; max-width: 340px; box-shadow: 0 12px 40px rgba(0,0,0,0.5);
-  }
-  .toast.show { display: block; animation: toastIn 0.3s ease; }
-  .toast.success { border-color: var(--green); }
-  .toast.error   { border-color: var(--red); }
-  @keyframes toastIn { from{opacity:0;transform:translateX(30px)} to{opacity:1;transform:translateX(0)} }
-  .toast-title { font-weight: 800; font-size: 0.92rem; margin-bottom: 3px; }
-  .toast.success .toast-title { color: var(--green); }
-  .toast.error   .toast-title { color: var(--red); }
-  .toast-msg { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; }
-
-  /* ══ LOADING ══ */
-  .loading-bar {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 9999; height: 3px;
-    background: linear-gradient(90deg, var(--purple), var(--blue), var(--purple));
-    background-size: 200% 100%; animation: loadBar 1s linear infinite; display: none;
-  }
-  .loading-bar.show { display: block; }
-  @keyframes loadBar { from{background-position:200% 0} to{background-position:-200% 0} }
-
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: var(--purple-d); }
-
-  /* ══════════════════════════════════════════
-     RESPONSIVIDADE
-  ══════════════════════════════════════════ */
-  /* Desktop: mostra grid, esconde lista */
-  @media (min-width: 700px) {
-    .view-desktop { display: block; }
-    .view-mobile  { display: none; }
-    .week-nav { padding: 14px 32px; }
-    .legend   { padding: 10px 32px; }
-  }
-
-  /* Mobile: esconde grid, mostra lista */
-  @media (max-width: 699px) {
-    .view-desktop { display: none; }
-    .view-mobile  { display: block; }
-    header { padding: 12px 16px; }
-    .header-titles h1 { font-size: 0.92rem; }
-    .header-titles p  { font-size: 0.63rem; }
-    .btn { padding: 8px 12px; font-size: 0.8rem; }
-    .legend { padding: 8px 14px; gap: 10px; font-size: 0.71rem; }
-    .week-nav { padding: 10px 14px; flex-wrap: wrap; gap: 6px; }
-    .week-label { width: 100%; text-align: center; font-size: 0.85rem; order: -1; }
-    .week-controls { margin: 0 auto; }
-    /* Modal sobe do fundo */
-    .modal-overlay { padding: 0; align-items: flex-end; }
-    .modal { border-radius: 20px 20px 0 0; max-height: 92vh; max-width: 100%; }
-    .form-grid { grid-template-columns: 1fr; gap: 11px; }
-    .form-grid .full { grid-column: 1; }
-    .modal-header { padding: 18px 16px 14px; }
-    .modal-body   { padding: 14px 16px; }
-    .modal-footer { padding: 12px 16px 20px; flex-direction: column; }
-    .modal-footer .btn { width: 100%; justify-content: center; }
-    .toast { bottom: 14px; right: 12px; left: 12px; max-width: unset; }
-  }
+:root{--bg:#080810;--surface:#10101e;--card:#16162a;--border:#2a2a45;--purple:#7c3aed;--purple-l:#9d5cf6;--purple-d:#5b21b6;--green:#10b981;--amber:#f59e0b;--red:#ef4444;--blue:#3b82f6;--text:#e8e8f0;--text-muted:#8888aa;--text-dim:#55556a}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Nunito",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(124,58,237,.18) 0%,transparent 60%),radial-gradient(ellipse 40% 30% at 90% 90%,rgba(59,130,246,.08) 0%,transparent 50%);pointer-events:none;z-index:0}
+header{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:16px 32px;background:rgba(16,16,30,.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);box-shadow:0 4px 32px rgba(0,0,0,.4)}
+.hbrand{display:flex;align-items:center;gap:14px}
+.hicon{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--purple-d),var(--purple));display:flex;align-items:center;justify-content:center;font-size:1.5rem;box-shadow:0 0 18px rgba(124,58,237,.4);flex-shrink:0}
+.htitles h1{font-family:"Cinzel",serif;font-size:1.1rem;font-weight:700;color:#fff;letter-spacing:.04em;line-height:1.1}
+.htitles p{font-size:.7rem;color:var(--text-muted);letter-spacing:.12em;text-transform:uppercase;margin-top:2px}
+.hactions{display:flex;align-items:center;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:10px;font-family:"Nunito",sans-serif;font-size:.875rem;font-weight:700;cursor:pointer;border:none;transition:all .2s;text-decoration:none}
+.btn-primary{background:linear-gradient(135deg,var(--purple),var(--purple-d));color:#fff;box-shadow:0 4px 18px rgba(124,58,237,.4)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(124,58,237,.55)}
+.btn-ghost{background:rgba(255,255,255,.05);color:var(--text-muted);border:1px solid var(--border)}
+.btn-ghost:hover{background:rgba(255,255,255,.1);color:var(--text)}
+.btn-admin{background:rgba(124,58,237,.12);color:var(--purple-l);border:1px solid rgba(124,58,237,.3)}
+.btn-admin:hover{background:rgba(124,58,237,.22)}
+.legend{position:relative;z-index:5;display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:10px 32px;background:rgba(16,16,30,.6);border-bottom:1px solid var(--border);font-size:.77rem;color:var(--text-muted)}
+.legend-item{display:flex;align-items:center;gap:6px}
+.legend-dot{width:10px;height:10px;border-radius:3px}
+.week-nav{position:relative;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:14px 32px}
+.week-label{font-family:"Cinzel",serif;font-size:1rem;font-weight:600;color:var(--text)}
+.week-controls{display:flex;gap:8px;align-items:center}
+.btn-nav{width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--border);border-radius:8px;cursor:pointer;color:var(--text-muted);font-size:.9rem;transition:all .2s}
+.btn-nav:hover{border-color:var(--purple);color:var(--purple-l)}
+.btn-today{padding:7px 14px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--text-muted);font-family:"Nunito",sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-today:hover{border-color:var(--purple);color:var(--purple-l)}
+.view-desktop{display:block}
+.view-mobile{display:none}
+.cal-wrap{position:relative;z-index:5;padding:0 32px 32px}
+.cal{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.4)}
+.cal-header{display:grid;grid-template-columns:150px repeat(7,1fr);border-bottom:1px solid var(--border)}
+.cal-hcell{padding:14px 8px;text-align:center;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);border-right:1px solid var(--border)}
+.cal-hcell:last-child{border-right:none}
+.cal-hcell.today-col{color:var(--purple-l)}
+.cal-hcell .dn{display:block;font-family:"Cinzel",serif;font-size:1.1rem;font-weight:700;color:var(--text);margin-top:2px}
+.cal-hcell.today-col .dn{background:var(--purple);color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:4px auto 0;box-shadow:0 0 14px rgba(124,58,237,.5)}
+.cal-row{display:grid;grid-template-columns:150px repeat(7,1fr);border-bottom:1px solid var(--border);min-height:82px}
+.cal-row:last-child{border-bottom:none}
+.cal-slabel{display:flex;align-items:center;gap:8px;padding:12px 14px;border-right:1px solid var(--border);font-size:.8rem;font-weight:700;color:var(--text-muted);background:rgba(0,0,0,.15)}
+.cal-cell{padding:5px 4px;border-right:1px solid var(--border);display:flex;flex-direction:column;gap:4px;min-height:82px;transition:background .15s}
+.cal-cell:last-child{border-right:none}
+.cal-cell:hover{background:rgba(124,58,237,.04)}
+.res-block{border-radius:7px;padding:5px 7px;font-size:.71rem;line-height:1.3;cursor:pointer;transition:transform .15s,box-shadow .15s;border-left:3px solid transparent}
+.res-block:hover{transform:scale(1.03);box-shadow:0 4px 12px rgba(0,0,0,.4);z-index:2;position:relative}
+.sf{background:rgba(124,58,237,.15);border-left-color:var(--purple);color:#c4b5fd}
+.sa{background:rgba(16,185,129,.15);border-left-color:var(--green);color:#6ee7b7}
+.sp{background:rgba(245,158,11,.15);border-left-color:var(--amber);color:#fcd34d}
+.sr{background:rgba(239,68,68,.1);border-left-color:var(--red);color:#fca5a5;opacity:.6}
+.res-time{font-weight:800;font-size:.66rem;opacity:.85;display:block;margin-bottom:1px}
+.res-name{font-weight:700;font-size:.71rem;display:block}
+.res-dept{font-size:.64rem;opacity:.7;display:block}
+.empty-cell{display:flex;align-items:center;justify-content:center;height:100%;min-height:70px;color:var(--text-dim);font-size:.7rem}
+.mf-tabs{display:flex;gap:7px;overflow-x:auto;padding:10px 14px 0;scrollbar-width:none}
+.mf-tabs::-webkit-scrollbar{display:none}
+.mf-tab{white-space:nowrap;padding:6px 13px;border-radius:20px;background:var(--card);border:1px solid var(--border);color:var(--text-muted);font-family:"Nunito",sans-serif;font-size:.76rem;font-weight:700;cursor:pointer;flex-shrink:0;transition:all .2s}
+.mf-tab.active{background:rgba(124,58,237,.2);border-color:var(--purple);color:var(--purple-l)}
+.mob-list{padding:10px 12px 28px;display:flex;flex-direction:column;gap:12px}
+.mob-day{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.mob-day-h{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(0,0,0,.2);border-bottom:1px solid var(--border)}
+.mob-day-name{font-size:.78rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em}
+.mob-day-num{font-family:"Cinzel",serif;font-size:.9rem;font-weight:700;color:var(--text)}
+.mob-day-num.istoday{background:var(--purple);color:#fff;padding:2px 9px;border-radius:12px;box-shadow:0 0 10px rgba(124,58,237,.45)}
+.mob-res{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-bottom:1px solid rgba(42,42,69,.5);cursor:pointer;transition:background .15s}
+.mob-res:last-child{border-bottom:none}
+.mob-res:hover{background:rgba(124,58,237,.05)}
+.mob-stripe{width:4px;min-height:40px;border-radius:2px;flex-shrink:0;margin-top:2px}
+.stf{background:var(--purple)}.sta{background:var(--green)}.stp{background:var(--amber)}.str{background:var(--red);opacity:.5}
+.mob-info{flex:1;min-width:0}
+.mob-rname{font-size:.85rem;font-weight:800;color:var(--text)}
+.mob-rmeta{font-size:.73rem;color:var(--text-muted);margin-top:3px;display:flex;flex-direction:column;gap:2px}
+.mob-badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:10px;font-size:.65rem;font-weight:800;margin-top:4px}
+.baf{background:rgba(124,58,237,.15);color:var(--purple-l)}.baa{background:rgba(16,185,129,.15);color:var(--green)}.bap{background:rgba(245,158,11,.15);color:var(--amber)}.bar{background:rgba(239,68,68,.1);color:var(--red)}
+.mob-empty{padding:16px 14px;text-align:center;font-size:.78rem;color:var(--text-dim)}
+.modal-ov{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px}
+.modal-ov.open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;width:100%;max-width:580px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,.7),0 0 0 1px rgba(124,58,237,.2);animation:mIn .25s ease}
+@keyframes mIn{from{opacity:0;transform:scale(.95) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-h{padding:22px 26px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-h h2{font-family:"Cinzel",serif;font-size:1.05rem;font-weight:700;color:#fff}
+.modal-h p{font-size:.78rem;color:var(--text-muted);margin-top:3px}
+.modal-x{width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:8px;cursor:pointer;color:var(--text-muted);font-size:1rem;transition:all .2s}
+.modal-x:hover{background:rgba(239,68,68,.15);color:var(--red);border-color:var(--red)}
+.modal-b{padding:22px 26px}
+.modal-f{padding:18px 26px 22px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fgrid .full{grid-column:1/-1}
+.fg{display:flex;flex-direction:column;gap:6px}
+.fg label{font-size:.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em}
+.fg input,.fg select,.fg textarea{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 13px;color:var(--text);font-family:"Nunito",sans-serif;font-size:.88rem;outline:none;transition:border-color .2s,box-shadow .2s;width:100%}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(124,58,237,.15)}
+.fg select option{background:var(--card)}
+.fg textarea{resize:vertical;min-height:76px}
+.conflict{display:none;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.4);border-radius:10px;padding:11px 15px;margin-top:14px;color:#fca5a5;font-size:.84rem;line-height:1.5}
+.conflict.show{display:block}
+.det-row{display:flex;gap:10px;margin-bottom:11px;padding-bottom:11px;border-bottom:1px solid var(--border)}
+.det-row:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.det-icon{font-size:1.1rem;width:26px;flex-shrink:0}
+.det-lbl{font-size:.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em}
+.det-val{font-size:.9rem;color:var(--text);font-weight:600;margin-top:1px}
+.sbadge{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;font-size:.75rem;font-weight:800}
+.sba{background:rgba(16,185,129,.15);color:var(--green);border:1px solid rgba(16,185,129,.3)}
+.sbp{background:rgba(245,158,11,.15);color:var(--amber);border:1px solid rgba(245,158,11,.3)}
+.sbf{background:rgba(124,58,237,.15);color:var(--purple-l);border:1px solid rgba(124,58,237,.3)}
+.toast{display:none;position:fixed;bottom:26px;right:26px;z-index:2000;background:var(--card);border:1px solid var(--border);border-radius:13px;padding:14px 20px;max-width:340px;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.toast.show{display:block;animation:tIn .3s ease}
+.toast.success{border-color:var(--green)}
+.toast.error{border-color:var(--red)}
+@keyframes tIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+.toast-title{font-weight:800;font-size:.92rem;margin-bottom:3px}
+.toast.success .toast-title{color:var(--green)}
+.toast.error .toast-title{color:var(--red)}
+.toast-msg{font-size:.8rem;color:var(--text-muted);line-height:1.5}
+.lbar{position:fixed;top:0;left:0;right:0;z-index:9999;height:3px;background:linear-gradient(90deg,var(--purple),var(--blue),var(--purple));background-size:200% 100%;animation:lb 1s linear infinite;display:none}
+.lbar.show{display:block}
+@keyframes lb{from{background-position:200% 0}to{background-position:-200% 0}}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--purple-d)}
+@media(min-width:700px){.view-desktop{display:block}.view-mobile{display:none}.week-nav{padding:14px 32px}.legend{padding:10px 32px}}
+@media(max-width:699px){.view-desktop{display:none}.view-mobile{display:block}header{padding:12px 16px}.htitles h1{font-size:.92rem}.htitles p{font-size:.63rem}.btn{padding:8px 12px;font-size:.8rem}.legend{padding:8px 14px;gap:10px;font-size:.71rem}.week-nav{padding:10px 14px;flex-wrap:wrap;gap:6px}.week-label{width:100%;text-align:center;font-size:.85rem;order:-1}.week-controls{margin:0 auto}.modal-ov{padding:0;align-items:flex-end}.modal{border-radius:20px 20px 0 0;max-height:92vh;max-width:100%}.fgrid{grid-template-columns:1fr;gap:11px}.fgrid .full{grid-column:1}.modal-h{padding:18px 16px 14px}.modal-b{padding:14px 16px}.modal-f{padding:12px 16px 20px;flex-direction:column}.modal-f .btn{width:100%;justify-content:center}.toast{bottom:14px;right:12px;left:12px;max-width:unset}}
 </style>
 </head>
 <body>
-<div class="loading-bar" id="loadingBar"></div>
-
-<!-- ══ HEADER ══ -->
+<div class="lbar" id="lbar"></div>
 <header>
-  <div class="header-brand">
-    <div class="header-icon">🏛️</div>
-    <div class="header-titles">
-      <h1>IASD Granja Viana</h1>
-      <p>Reserva de Espaços</p>
-    </div>
+  <div class="hbrand">
+    <div class="hicon">&#127963;</div>
+    <div class="htitles"><h1>IASD Granja Viana</h1><p>Reserva de Espacos</p></div>
   </div>
-  <div class="header-actions">
-    <a href="admin.html" class="btn btn-admin">🔑 Admin</a>
-    <button class="btn btn-primary" onclick="openModal()">📋 Solicitar Reserva</button>
+  <div class="hactions">
+    <a href="admin.html" class="btn btn-admin">&#128273; Admin</a>
+    <button class="btn btn-primary" onclick="openModal()">&#128203; Solicitar Reserva</button>
   </div>
 </header>
-
-<!-- ══ LEGENDA ══ -->
 <div class="legend">
-  <span style="font-weight:800;font-size:0.75rem;">LEGENDA:</span>
-  <div class="legend-item"><div class="legend-dot" style="background:var(--purple);opacity:0.8;"></div><span>🔒 Reserva Fixa</span></div>
-  <div class="legend-item"><div class="legend-dot" style="background:var(--green);"></div><span>✅ Aprovada</span></div>
-  <div class="legend-item"><div class="legend-dot" style="background:var(--amber);"></div><span>⏳ Pré-reservada</span></div>
+  <span style="font-weight:800;font-size:.75rem;">LEGENDA:</span>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--purple);opacity:.8"></div><span>&#128274; Reserva Fixa</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div><span>&#9989; Aprovada</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div><span>&#9203; Pre-reservada</span></div>
 </div>
-
-<!-- ══ WEEK NAV ══ -->
 <div class="week-nav">
-  <div class="week-label" id="weekLabel">—</div>
+  <div class="week-label" id="weekLabel">...</div>
   <div class="week-controls">
-    <button class="btn-nav" onclick="changeWeek(-1)">◀</button>
+    <button class="btn-nav" onclick="changeWeek(-1)">&#9664;</button>
     <button class="btn-today" onclick="goToday()">Hoje</button>
-    <button class="btn-nav" onclick="changeWeek(1)">▶</button>
+    <button class="btn-nav" onclick="changeWeek(1)">&#9654;</button>
   </div>
 </div>
-
-<!-- ══ DESKTOP: CALENDÁRIO GRID ══ -->
-<div class="view-desktop">
-  <div class="calendar-wrap">
-    <div class="calendar" id="calGrid"></div>
-  </div>
-</div>
-
-<!-- ══ MOBILE: ABAS + LISTA ══ -->
+<div class="view-desktop"><div class="cal-wrap"><div class="cal" id="calGrid"></div></div></div>
 <div class="view-mobile">
-  <div class="mobile-filter-tabs" id="mfTabs">
-    <button class="mf-tab active" onclick="setMobileFilter(null,this)">📅 Todos</button>
-    <button class="mf-tab" onclick="setMobileFilter('nave',this)">⛪ Nave</button>
-    <button class="mf-tab" onclick="setMobileFilter('salao',this)">🎭 Salão</button>
-    <button class="mf-tab" onclick="setMobileFilter('senior',this)">👴 Sêniores</button>
-    <button class="mf-tab" onclick="setMobileFilter('admin',this)">🏢 Administrativa</button>
+  <div class="mf-tabs" id="mfTabs">
+    <button class="mf-tab active" onclick="setMF(null,this)">&#128197; Todos</button>
+    <button class="mf-tab" onclick="setMF('nave',this)">&#9962; Nave</button>
+    <button class="mf-tab" onclick="setMF('salao',this)">&#127917; Salao</button>
+    <button class="mf-tab" onclick="setMF('senior',this)">&#128116; Seniores</button>
+    <button class="mf-tab" onclick="setMF('admin',this)">&#127970; Administrativa</button>
   </div>
-  <div class="mobile-list" id="mobileList"></div>
+  <div class="mob-list" id="mobList"></div>
 </div>
-
-<!-- ══ MODAL SOLICITAR ══ -->
-<div class="modal-overlay" id="modalOverlay">
+<div class="modal-ov" id="modalOv">
   <div class="modal">
-    <div class="modal-header">
-      <div>
-        <h2>📋 Solicitar Reserva</h2>
-        <p>Preencha os dados — aguardará aprovação da secretaria</p>
-      </div>
-      <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-h">
+      <div><h2>&#128203; Solicitar Reserva</h2><p>Preencha os dados - aguardara aprovacao da secretaria</p></div>
+      <button class="modal-x" onclick="closeModal()">&#10005;</button>
     </div>
-    <div class="modal-body">
-      <div class="form-grid">
-        <div class="form-group full">
-          <label>👤 Nome Completo</label>
-          <input type="text" id="f_nome" placeholder="Seu nome completo">
-        </div>
-        <div class="form-group">
-          <label>📱 WhatsApp</label>
-          <input type="tel" id="f_fone" placeholder="(11) 9 9999-9999">
-        </div>
-        <div class="form-group">
-          <label>👥 Departamento</label>
-          <select id="f_dept">
-            <option value="">Selecione...</option>
-            <option>🌟 Aventureiros</option>
-            <option>🤝 ASA — Ação Solidária Adventista</option>
-            <option>⚓ Desbravadores</option>
-            <option>🎓 Escola Sabatina</option>
-            <option>👨‍👩‍👧 Ministério da Família</option>
-            <option>👶 Ministério Infantil</option>
-            <option>📣 Ministério da Mulher</option>
-            <option>🌿 Ministério da Saúde</option>
-            <option>🎵 Música</option>
-            <option>✝️ Pastor / Secretaria</option>
-            <option>➕ Outro</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>🎯 Tipo de Atividade</label>
-          <select id="f_ativ">
-            <option value="">Selecione...</option>
-            <option>🌿 Atividade do Ministério da Saúde</option>
-            <option>💍 Casamento</option>
-            <option>🤝 Comissão</option>
-            <option>🙏 Culto / Celebração</option>
-            <option>🎶 Ensaio — Coral</option>
-            <option>🎤 Ensaio — Coral Jovem</option>
-            <option>🎸 Ensaio — Banda</option>
-            <option>🎻 Ensaio — Orquestra</option>
-            <option>🎉 Evento Especial</option>
-            <option>📖 Estudos Bíblicos</option>
-            <option>🗓️ Reunião de Departamento</option>
-            <option>🕊️ Velório / Memorial</option>
-            <option>📋 Outro</option>
-          </select>
-        </div>
-        <div class="form-group full">
-          <label>📍 Espaço Desejado</label>
-          <select id="f_espaco" onchange="checkConflict()">
-            <option value="">Selecione...</option>
-            <option>⛪ Nave da Igreja</option>
-            <option>🎭 Salão de Jovens</option>
-            <option>👴 Sala dos Sêniores</option>
-            <option>🏢 Sala Administrativa</option>
-            <option>➕ Outro</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>📅 Data</label>
-          <input type="date" id="f_data" onchange="checkConflict()">
-        </div>
-        <div class="form-group">
-          <label>👥 Nº de Pessoas</label>
-          <input type="number" id="f_pessoas" placeholder="Ex: 20" min="1">
-        </div>
-        <div class="form-group">
-          <label>⏰ Horário Início</label>
-          <input type="time" id="f_inicio" onchange="checkConflict()">
-        </div>
-        <div class="form-group">
-          <label>⏰ Horário Término</label>
-          <input type="time" id="f_fim" onchange="checkConflict()">
-        </div>
-        <div class="form-group full">
-          <label>💬 Observações</label>
-          <textarea id="f_obs" placeholder="Alguma informação adicional..."></textarea>
-        </div>
+    <div class="modal-b">
+      <div class="fgrid">
+        <div class="fg full"><label>Nome Completo</label><input type="text" id="f_nome" placeholder="Seu nome completo"></div>
+        <div class="fg"><label>WhatsApp</label><input type="tel" id="f_fone" placeholder="(11) 9 9999-9999"></div>
+        <div class="fg"><label>Departamento</label>
+          <select id="f_dept"><option value="">Selecione...</option>
+            <option>Aventureiros</option><option>ASA - Acao Solidaria Adventista</option>
+            <option>Desbravadores</option><option>Escola Sabatina</option>
+            <option>Ministerio da Familia</option><option>Ministerio Infantil</option>
+            <option>Ministerio da Mulher</option><option>Ministerio da Saude</option>
+            <option>Musica</option><option>Pastor / Secretaria</option><option>Outro</option>
+          </select></div>
+        <div class="fg"><label>Tipo de Atividade</label>
+          <select id="f_ativ"><option value="">Selecione...</option>
+            <option>Atividade do Ministerio da Saude</option><option>Casamento</option>
+            <option>Comissao</option><option>Culto / Celebracao</option>
+            <option>Ensaio - Coral</option><option>Ensaio - Coral Jovem</option>
+            <option>Ensaio - Banda</option><option>Ensaio - Orquestra</option>
+            <option>Evento Especial</option><option>Estudos Biblicos</option>
+            <option>Reuniao de Departamento</option><option>Velorio / Memorial</option><option>Outro</option>
+          </select></div>
+        <div class="fg full"><label>Espaco Desejado</label>
+          <select id="f_espaco" onchange="checkConflict()"><option value="">Selecione...</option>
+            <option>Nave da Igreja</option><option>Salao de Jovens</option>
+            <option>Sala dos Seniores</option><option>Sala Administrativa</option><option>Outro</option>
+          </select></div>
+        <div class="fg"><label>Data</label><input type="date" id="f_data" onchange="checkConflict()"></div>
+        <div class="fg"><label>Nr de Pessoas</label><input type="number" id="f_pessoas" placeholder="Ex: 20" min="1"></div>
+        <div class="fg"><label>Horario Inicio</label><input type="time" id="f_inicio" onchange="checkConflict()"></div>
+        <div class="fg"><label>Horario Termino</label><input type="time" id="f_fim" onchange="checkConflict()"></div>
+        <div class="fg full"><label>Observacoes</label><textarea id="f_obs" placeholder="Alguma informacao adicional..."></textarea></div>
       </div>
-      <div class="conflict-alert" id="conflictAlert">
-        ⚠️ <strong>Conflito de horário!</strong><br>
-        <span id="conflictMsg"></span>
-      </div>
+      <div class="conflict" id="conflictBox">&#9888; <strong>Conflito de horario!</strong><br><span id="conflictMsg"></span></div>
     </div>
-    <div class="modal-footer">
+    <div class="modal-f">
       <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
-      <button class="btn btn-primary" onclick="submitReserva()">📨 Enviar Solicitação</button>
+      <button class="btn btn-primary" onclick="submitReserva()">Enviar Solicitacao</button>
     </div>
   </div>
 </div>
-
-<!-- ══ MODAL DETALHE ══ -->
-<div class="modal-overlay" id="detailOverlay">
-  <div class="modal" style="max-width:430px;">
-    <div class="modal-header">
-      <div>
-        <h2 id="detailTitle">Detalhes</h2>
-        <div id="detailBadge" style="margin-top:6px;"></div>
-      </div>
-      <button class="modal-close" onclick="closeDetail()">✕</button>
+<div class="modal-ov" id="detailOv">
+  <div class="modal" style="max-width:430px">
+    <div class="modal-h">
+      <div><h2 id="detTitle">Detalhes</h2><div id="detBadge" style="margin-top:6px"></div></div>
+      <button class="modal-x" onclick="closeDetail()">&#10005;</button>
     </div>
-    <div class="modal-body" id="detailBody"></div>
+    <div class="modal-b" id="detBody"></div>
   </div>
 </div>
-
-<!-- ══ TOAST ══ -->
-<div class="toast" id="toast">
-  <div class="toast-title" id="toastTitle"></div>
-  <div class="toast-msg"   id="toastMsg"></div>
-</div>
-
+<div class="toast" id="toast"><div class="toast-title" id="toastTitle"></div><div class="toast-msg" id="toastMsg"></div></div>
 <script>
-// ═══════════════════════════════════════
-//  CONFIG
-// ═══════════════════════════════════════
-const CONFIG = {
-  ADMIN_WHATSAPP: "5511970148615",
-};
+var GAS_URL = "https://script.google.com/macros/s/AKfycbykDKCav1L4ZNrtCHVe5o3II56c0_rCiQuef7h2nS0tVTqbbgcku96S717pMib8ifyk/exec";
+var WA_ADMIN = "5511970148615";
 
-const ESPACOS = [
-  { id:"nave",   label:"⛪ Nave da Igreja" },
-  { id:"salao",  label:"🎭 Salão de Jovens" },
-  { id:"senior", label:"👴 Sala dos Sêniores" },
-  { id:"admin",  label:"🏢 Sala Administrativa" },
-  { id:"outro",  label:"➕ Outro" },
+var ESPACOS = [
+  {id:"nave",   lbl:"Nave da Igreja"},
+  {id:"salao",  lbl:"Salao de Jovens"},
+  {id:"senior", lbl:"Sala dos Seniores"},
+  {id:"admin",  lbl:"Sala Administrativa"},
+  {id:"outro",  lbl:"Outro"}
+];
+var DIAS   = ["Dom","Seg","Ter","Qua","Qui","Sex","Sab"];
+var DIASX  = ["Domingo","Segunda","Terca","Quarta","Quinta","Sexta","Sabado"];
+var MESES  = ["Janeiro","Fevereiro","Marco","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+
+var FIXAS = [
+  {id:"fix01",nome:"Ensaio Orquestra",    dept:"Musica",          ativ:"Ensaio - Orquestra",                  espaco:"nave",   ini:"17:00",fim:"19:00",rec:{t:"w",wd:6},obs:"Todo sabado"},
+  {id:"fix02",nome:"Ensaio Coral",        dept:"Musica",          ativ:"Ensaio - Coral",                      espaco:"nave",   ini:"15:00",fim:"17:00",rec:{t:"m",wd:6,wks:[1,3]},obs:"1 e 3 sabado"},
+  {id:"fix03",nome:"Ensaio Coral Jovem",  dept:"Musica",          ativ:"Ensaio - Coral Jovem",                espaco:"salao",  ini:"16:45",fim:"18:00",rec:{t:"m",wd:6,wks:[2,4]},obs:"2 e 4 sabado"},
+  {id:"fix04",nome:"Estudos Biblicos",    dept:"Desbravadores",   ativ:"Estudos Biblicos",                    espaco:"salao",  ini:"15:00",fim:"16:30",rec:{t:"m",wd:6,wks:[2,4]},obs:"2 e 4 sabado"},
+  {id:"fix05",nome:"Estudos Biblicos ASA",dept:"ASA",             ativ:"Estudos Biblicos",                    espaco:"salao",  ini:"15:00",fim:"16:00",rec:{t:"m",wd:6,wks:[3]},  obs:"3 sabado"},
+  {id:"fix06",nome:"Comissao",            dept:"Pastor/Secretaria",ativ:"Comissao",                           espaco:"salao",  ini:"14:00",fim:"16:00",rec:{t:"m",wd:6,wks:[1]},  obs:"1 sabado"},
+  {id:"fix07",nome:"Respire Livre",       dept:"Min. da Saude",   ativ:"Atividade do Ministerio da Saude",    espaco:"senior", ini:"19:30",fim:"20:30",rec:{t:"w",wd:5},obs:"Toda sexta"}
 ];
 
-const DIAS_PT  = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
-const DIAS_EXT = ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"];
-const MESES_PT = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+var allReservas = [];
+var weekStart   = getWeekStart(new Date());
+var mobFiltro   = null;
 
-// ═══════════════════════════════════════
-//  RESERVAS FIXAS
-// ═══════════════════════════════════════
-const RESERVAS_FIXAS = [
-  { id:"fix_01", nome:"Ensaio Orquestra",     dept:"🎵 Música",                           ativ:"🎻 Ensaio — Orquestra",               espaco:"nave",   inicio:"17:00", fim:"19:00", recorrencia:{ type:"weekly", weekday:6 }, obs:"Reserva fixa — Todo sábado" },
-  { id:"fix_02", nome:"Ensaio Coral",         dept:"🎵 Música",                           ativ:"🎶 Ensaio — Coral",                   espaco:"nave",   inicio:"15:00", fim:"17:00", recorrencia:{ type:"monthly_week", weekday:6, weeks:[1,3] }, obs:"Reserva fixa — 1º e 3º sábado" },
-  { id:"fix_03", nome:"Ensaio Coral Jovem",   dept:"🎵 Música",                           ativ:"🎤 Ensaio — Coral Jovem",             espaco:"salao",  inicio:"16:45", fim:"18:00", recorrencia:{ type:"monthly_week", weekday:6, weeks:[2,4] }, obs:"Reserva fixa — 2º e 4º sábado" },
-  { id:"fix_04", nome:"Estudos Bíblicos",     dept:"⚓ Desbravadores",                    ativ:"📖 Estudos Bíblicos",                 espaco:"salao",  inicio:"15:00", fim:"16:30", recorrencia:{ type:"monthly_week", weekday:6, weeks:[2,4] }, obs:"Reserva fixa — 2º e 4º sábado" },
-  { id:"fix_05", nome:"Estudos Bíblicos ASA", dept:"🤝 ASA — Ação Solidária Adventista",  ativ:"📖 Estudos Bíblicos",                 espaco:"salao",  inicio:"15:00", fim:"16:00", recorrencia:{ type:"monthly_week", weekday:6, weeks:[3] },   obs:"Reserva fixa — 3º sábado" },
-  { id:"fix_06", nome:"Reunião / Comissão",   dept:"✝️ Pastor / Secretaria",              ativ:"🤝 Comissão",                         espaco:"salao",  inicio:"14:00", fim:"16:00", recorrencia:{ type:"monthly_week", weekday:6, weeks:[1] },   obs:"Reserva fixa — 1º sábado" },
-  { id:"fix_07", nome:"Respire Livre",        dept:"🌿 Ministério da Saúde",              ativ:"🌿 Atividade do Ministério da Saúde", espaco:"senior", inicio:"19:30", fim:"20:30", recorrencia:{ type:"weekly", weekday:5 }, obs:"Reserva fixa — Toda sexta-feira" },
-];
+function getWeekStart(d){var dt=new Date(d);dt.setHours(0,0,0,0);dt.setDate(dt.getDate()-dt.getDay());return dt;}
+function addDays(d,n){var dt=new Date(d);dt.setDate(dt.getDate()+n);return dt;}
+function dstr(d){return d.toISOString().slice(0,10);}
+function fmtDate(s){var d=new Date(s+"T12:00:00");return pad(d.getDate())+"/"+pad(d.getMonth()+1)+"/"+d.getFullYear();}
+function pad(n){return n<10?"0"+n:n;}
+function t2m(t){var p=t.split(":");return parseInt(p[0])*60+parseInt(p[1]);}
+function normEsp(v){if(!v)return"";if(v.indexOf("Nave")>=0)return"nave";if(v.indexOf("Salao")>=0||v.indexOf("Salão")>=0)return"salao";if(v.indexOf("Senior")>=0||v.indexOf("Sênior")>=0)return"senior";if(v.indexOf("Admin")>=0)return"admin";return"outro";}
+function showLoad(v){document.getElementById("lbar").className=v?"lbar show":"lbar";}
+function showToast(type,title,msg){var t=document.getElementById("toast");t.className="toast "+type+" show";document.getElementById("toastTitle").textContent=title;document.getElementById("toastMsg").textContent=msg;setTimeout(function(){t.classList.remove("show");},6000);}
 
-// ═══════════════════════════════════════
-//  STATE
-// ═══════════════════════════════════════
-let currentWeekStart  = getWeekStart(new Date());
-let allReservas       = [];
-let mobileEspacoFiltro = null;
-
-// ═══════════════════════════════════════
-//  UTILS
-// ═══════════════════════════════════════
-function getWeekStart(d) {
-  const dt = new Date(d); dt.setHours(0,0,0,0);
-  dt.setDate(dt.getDate() - dt.getDay()); return dt;
-}
-function addDays(d,n){ const dt=new Date(d); dt.setDate(dt.getDate()+n); return dt; }
-function dateStr(d){ return d.toISOString().slice(0,10); }
-function formatDate(s){ const d=new Date(s+"T12:00:00"); return `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()}`; }
-function timeToMin(t){ const [h,m]=t.split(":").map(Number); return h*60+m; }
-function normalizeEspaco(v){
-  if(!v) return "";
-  if(v.includes("Nave"))           return "nave";
-  if(v.includes("Salão"))          return "salao";
-  if(v.includes("Sênior"))         return "senior";
-  if(v.includes("Administrativa")) return "admin";
-  return "outro";
-}
-function showLoading(v){ document.getElementById("loadingBar").classList.toggle("show",v); }
-function showToast(type,title,msg){
-  const t=document.getElementById("toast");
-  t.className=`toast ${type} show`;
-  document.getElementById("toastTitle").textContent=title;
-  document.getElementById("toastMsg").textContent=msg;
-  setTimeout(()=>t.classList.remove("show"),6000);
-}
-
-// ═══════════════════════════════════════
-//  RESERVAS FIXAS → ocorrências da semana
-// ═══════════════════════════════════════
-function getFixedForWeek(weekStart) {
-  const result=[];
-  for(let i=0;i<7;i++){
-    const day=addDays(weekStart,i);
-    const dow=day.getDay(), yr=day.getFullYear(), mo=day.getMonth(), dd=day.getDate();
-    for(const f of RESERVAS_FIXAS){
-      const r=f.recorrencia; let ok=false;
-      if(r.type==="weekly" && r.weekday===dow){ ok=true; }
-      else if(r.type==="monthly_week" && r.weekday===dow){
-        let cnt=0;
-        for(let d2=1;d2<=dd;d2++) if(new Date(yr,mo,d2).getDay()===dow) cnt++;
-        if(r.weeks.includes(cnt)) ok=true;
+function getFixas(ws){
+  var res=[];
+  for(var i=0;i<7;i++){
+    var day=addDays(ws,i);
+    var dow=day.getDay(),yr=day.getFullYear(),mo=day.getMonth(),dd=day.getDate();
+    for(var j=0;j<FIXAS.length;j++){
+      var f=FIXAS[j],r=f.rec,ok=false;
+      if(r.t==="w"&&r.wd===dow){ok=true;}
+      else if(r.t==="m"&&r.wd===dow){
+        var cnt=0;
+        for(var d2=1;d2<=dd;d2++){if(new Date(yr,mo,d2).getDay()===dow)cnt++;}
+        if(r.wks.indexOf(cnt)>=0)ok=true;
       }
-      if(ok) result.push({...f, data:dateStr(day), tipo:"fixed"});
+      if(ok)res.push({id:f.id,nome:f.nome,dept:f.dept,ativ:f.ativ,espaco:f.espaco,inicio:f.ini,fim:f.fim,obs:f.obs,tipo:"fixed",data:dstr(day)});
     }
   }
-  return result;
+  return res;
 }
 
-// ═══════════════════════════════════════
-// ═══════════════════════════════════════
-async function loadReservas(){
-  showLoading(true);
-  try{
-    const res=await fetch("https://script.google.com/macros/s/AKfycbykDKCav1L4ZNrtCHVe5o3II56c0_rCiQuef7h2nS0tVTqbbgcku96S717pMib8ifyk/exec?action=load");
-    const json=await res.json();
-    allReservas=json.reservas||[];
-  }catch(e){ allReservas=[]; }
-  renderAll();
-  showLoading(false);
-}
-async function saveReservas(){
-  try{
-    await fetch("https://script.google.com/macros/s/AKfycbykDKCav1L4ZNrtCHVe5o3II56c0_rCiQuef7h2nS0tVTqbbgcku96S717pMib8ifyk/exec?action=save",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({reservas:allReservas})});
-    return true;
-  }catch(e){return false;}
-}`,{method:"PUT",headers:{"Content-Type":"application/json","X-Master-Key":CONFIG.JSONBIN_API_KEY},body:JSON.stringify({reservas:allReservas})});
-    return true;
-  }catch(e){return false;}
+function loadData(){
+  showLoad(true);
+  fetch(GAS_URL+"?action=load")
+    .then(function(r){return r.json();})
+    .then(function(j){allReservas=j.reservas||[];renderAll();showLoad(false);})
+    .catch(function(){allReservas=[];renderAll();showLoad(false);});
 }
 
-// ═══════════════════════════════════════
-//  RENDER GERAL
-// ═══════════════════════════════════════
+function saveData(cb){
+  fetch(GAS_URL+"?action=save",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({reservas:allReservas})})
+    .then(function(){if(cb)cb(true);})
+    .catch(function(){if(cb)cb(false);});
+}
+
 function renderAll(){
-  const days=Array.from({length:7},(_,i)=>addDays(currentWeekStart,i));
-  const today=dateStr(new Date());
-  const d0=days[0], d6=days[6];
-  let label= d0.getMonth()===d6.getMonth()
-    ? `${d0.getDate()} — ${d6.getDate()} de ${MESES_PT[d0.getMonth()]} de ${d0.getFullYear()}`
-    : `${d0.getDate()} ${MESES_PT[d0.getMonth()].slice(0,3)} — ${d6.getDate()} ${MESES_PT[d6.getMonth()].slice(0,3)} ${d6.getFullYear()}`;
-  document.getElementById("weekLabel").textContent=label;
-
-  const fixas=getFixedForWeek(currentWeekStart);
-  const weekDates=days.map(dateStr);
-  const dinamicas=allReservas.filter(r=>weekDates.includes(r.data));
-  const todas=[...fixas,...dinamicas];
-
-  renderDesktop(days, today, todas);
-  renderMobile(days, today, todas);
+  var days=[];for(var i=0;i<7;i++)days.push(addDays(weekStart,i));
+  var today=dstr(new Date());
+  var d0=days[0],d6=days[6];
+  var lbl=d0.getMonth()===d6.getMonth()
+    ?(d0.getDate()+" - "+d6.getDate()+" de "+MESES[d0.getMonth()]+" de "+d0.getFullYear())
+    :(d0.getDate()+" "+MESES[d0.getMonth()].slice(0,3)+" - "+d6.getDate()+" "+MESES[d6.getMonth()].slice(0,3)+" "+d6.getFullYear());
+  document.getElementById("weekLabel").textContent=lbl;
+  var fixas=getFixas(weekStart);
+  var wdates=days.map(dstr);
+  var din=allReservas.filter(function(r){return wdates.indexOf(r.data)>=0;});
+  var todas=fixas.concat(din);
+  renderDesktop(days,today,todas);
+  renderMobile(days,today,todas);
 }
 
-// ═══════════════════════════════════════
-//  RENDER DESKTOP
-// ═══════════════════════════════════════
-function renderDesktop(days, today, todas){
-  let html="";
-  // Header
-  html+='<div class="cal-header">';
-  html+='<div class="cal-header-cell" style="background:rgba(0,0,0,0.2);">Espaço</div>';
-  for(const d of days){
-    const ds=dateStr(d), iT=(ds===today);
-    html+=`<div class="cal-header-cell ${iT?"today-col":""}">${DIAS_PT[d.getDay()]}<span class="day-num">${d.getDate()}</span></div>`;
+function renderDesktop(days,today,todas){
+  var h="";
+  h+='<div class="cal-header">';
+  h+='<div class="cal-hcell" style="background:rgba(0,0,0,.2)">Espaco</div>';
+  for(var i=0;i<days.length;i++){
+    var d=days[i],ds=dstr(d),iT=(ds===today);
+    h+='<div class="cal-hcell'+(iT?" today-col":"")+'">'+DIAS[d.getDay()]+'<span class="dn">'+d.getDate()+'</span></div>';
   }
-  html+="</div>";
-  // Rows
-  for(const esp of ESPACOS){
-    if(esp.id==="outro") continue;
-    html+='<div class="cal-row">';
-    html+=`<div class="cal-space-label"><span>${esp.label.split(" ")[0]}</span><span style="font-size:0.75rem;">${esp.label.split(" ").slice(1).join(" ")}</span></div>`;
-    for(const d of days){
-      const ds=dateStr(d);
-      const items=todas.filter(r=>r.data===ds&&r.espaco===esp.id).sort((a,b)=>a.inicio.localeCompare(b.inicio));
-      html+='<div class="cal-cell">';
-      if(!items.length){ html+='<div class="empty-cell">—</div>'; }
-      else for(const r of items){
-        const cls=r.tipo==="fixed"?"status-fixed":r.status==="approved"?"status-approved":r.status==="pending"?"status-pending":"status-rejected";
-        html+=`<div class="res-block ${cls}" onclick="showDetail('${r.id}','${ds}')"><span class="res-time">⏰ ${r.inicio}–${r.fim}</span><span class="res-name">${r.ativ||r.nome}</span><span class="res-dept">${r.dept}</span></div>`;
+  h+="</div>";
+  for(var ei=0;ei<ESPACOS.length;ei++){
+    var esp=ESPACOS[ei];
+    if(esp.id==="outro")continue;
+    h+='<div class="cal-row">';
+    h+='<div class="cal-slabel">'+esp.lbl+'</div>';
+    for(var di=0;di<days.length;di++){
+      var ds2=dstr(days[di]);
+      var items=todas.filter(function(r){return r.data===ds2&&r.espaco===esp.id;});
+      items.sort(function(a,b){return a.inicio>b.inicio?1:-1;});
+      h+='<div class="cal-cell">';
+      if(!items.length){h+='<div class="empty-cell">-</div>';}
+      else{
+        for(var ri=0;ri<items.length;ri++){
+          var r=items[ri];
+          var cls=r.tipo==="fixed"?"sf":r.status==="approved"?"sa":r.status==="pending"?"sp":"sr";
+          h+='<div class="res-block '+cls+'" onclick="showDet(\''+r.id+'\',\''+ds2+'\')">';
+          h+='<span class="res-time">'+r.inicio+'-'+r.fim+'</span>';
+          h+='<span class="res-name">'+(r.ativ||r.nome)+'</span>';
+          h+='<span class="res-dept">'+r.dept+'</span></div>';
+        }
       }
-      html+="</div>";
+      h+="</div>";
     }
-    html+="</div>";
+    h+="</div>";
   }
-  document.getElementById("calGrid").innerHTML=html;
+  document.getElementById("calGrid").innerHTML=h;
 }
 
-// ═══════════════════════════════════════
-//  RENDER MOBILE
-// ═══════════════════════════════════════
-function renderMobile(days, today, todas){
-  let html="";
-  for(const d of days){
-    const ds=dateStr(d);
-    let items=todas.filter(r=>r.data===ds);
-    if(mobileEspacoFiltro) items=items.filter(r=>r.espaco===mobileEspacoFiltro);
-    items.sort((a,b)=>a.inicio.localeCompare(b.inicio));
-    const iT=(ds===today);
-    html+=`<div class="mobile-day-card">
-      <div class="mobile-day-header">
-        <span class="mobile-day-name">${DIAS_EXT[d.getDay()]}</span>
-        <span class="mobile-day-num ${iT?"is-today":""}">${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}</span>
-      </div>`;
-    if(!items.length){
-      html+='<div class="mobile-empty">Nenhuma reserva neste dia</div>';
-    } else {
-      for(const r of items){
-        const sc=r.tipo==="fixed"?"fixed":r.status==="approved"?"approved":r.status==="pending"?"pending":"rejected";
-        const bl=r.tipo==="fixed"?"🔒 Fixa":r.status==="approved"?"✅ Aprovada":r.status==="pending"?"⏳ Pendente":"❌ Rejeitada";
-        html+=`<div class="mobile-res-item" onclick="showDetail('${r.id}','${ds}')">
-          <div class="mobile-res-stripe stripe-${sc}"></div>
-          <div class="mobile-res-info">
-            <div class="mobile-res-name">${r.ativ||r.nome}</div>
-            <div class="mobile-res-meta">
-              <span>⏰ ${r.inicio} – ${r.fim}</span>
-              <span>📍 ${ESPACOS.find(e=>e.id===r.espaco)?.label||r.espaco}</span>
-              <span>👥 ${r.dept}</span>
-            </div>
-            <span class="mobile-res-badge badge-${sc}">${bl}</span>
-          </div>
-        </div>`;
+function renderMobile(days,today,todas){
+  var h="";
+  for(var i=0;i<days.length;i++){
+    var d=days[i],ds=dstr(d),iT=(ds===today);
+    var items=todas.filter(function(r){return r.data===ds;});
+    if(mobFiltro)items=items.filter(function(r){return r.espaco===mobFiltro;});
+    items.sort(function(a,b){return a.inicio>b.inicio?1:-1;});
+    h+='<div class="mob-day"><div class="mob-day-h"><span class="mob-day-name">'+DIASX[d.getDay()]+'</span>';
+    h+='<span class="mob-day-num'+(iT?" istoday":"")+'">'+pad(d.getDate())+"/"+pad(d.getMonth()+1)+'</span></div>';
+    if(!items.length){h+='<div class="mob-empty">Nenhuma reserva</div>';}
+    else{
+      for(var ri=0;ri<items.length;ri++){
+        var r=items[ri];
+        var sc=r.tipo==="fixed"?"f":r.status==="approved"?"a":r.status==="pending"?"p":"r";
+        var bl=r.tipo==="fixed"?"Fixa":r.status==="approved"?"Aprovada":r.status==="pending"?"Pendente":"Rejeitada";
+        var espLbl=ESPACOS.filter(function(e){return e.id===r.espaco;})[0];
+        h+='<div class="mob-res" onclick="showDet(\''+r.id+'\',\''+ds+'\')"><div class="mob-stripe st'+sc+'"></div>';
+        h+='<div class="mob-info"><div class="mob-rname">'+(r.ativ||r.nome)+'</div>';
+        h+='<div class="mob-rmeta"><span>'+r.inicio+' - '+r.fim+'</span>';
+        h+='<span>'+(espLbl?espLbl.lbl:r.espaco)+'</span><span>'+r.dept+'</span></div>';
+        h+='<span class="mob-badge ba'+sc+'">'+bl+'</span></div></div>';
       }
     }
-    html+="</div>";
+    h+="</div>";
   }
-  document.getElementById("mobileList").innerHTML=html;
+  document.getElementById("mobList").innerHTML=h;
 }
 
-function setMobileFilter(id,btn){
-  mobileEspacoFiltro=id;
-  document.querySelectorAll(".mf-tab").forEach(b=>b.classList.remove("active"));
+function setMF(id,btn){
+  mobFiltro=id;
+  var tabs=document.querySelectorAll(".mf-tab");
+  for(var i=0;i<tabs.length;i++)tabs[i].classList.remove("active");
   btn.classList.add("active");
   renderAll();
 }
 
-// ═══════════════════════════════════════
-//  NAVEGAÇÃO
-// ═══════════════════════════════════════
-function changeWeek(n){ currentWeekStart=addDays(currentWeekStart,n*7); renderAll(); }
-function goToday(){ currentWeekStart=getWeekStart(new Date()); renderAll(); }
+function changeWeek(n){weekStart=addDays(weekStart,n*7);renderAll();}
+function goToday(){weekStart=getWeekStart(new Date());renderAll();}
 
-// ═══════════════════════════════════════
-//  MODAL SOLICITAR
-// ═══════════════════════════════════════
-function openModal(){
-  document.getElementById("f_data").value=dateStr(new Date());
-  document.getElementById("modalOverlay").classList.add("open");
-  checkConflict();
-}
-function closeModal(){ document.getElementById("modalOverlay").classList.remove("open"); document.getElementById("conflictAlert").classList.remove("show"); }
+function openModal(){document.getElementById("f_data").value=dstr(new Date());document.getElementById("modalOv").classList.add("open");checkConflict();}
+function closeModal(){document.getElementById("modalOv").classList.remove("open");document.getElementById("conflictBox").classList.remove("show");}
 
 function checkConflict(){
-  const espaco=normalizeEspaco(document.getElementById("f_espaco").value);
-  const data=document.getElementById("f_data").value;
-  const inicio=document.getElementById("f_inicio").value;
-  const fim=document.getElementById("f_fim").value;
-  const alert=document.getElementById("conflictAlert");
-  const msg=document.getElementById("conflictMsg");
-  if(!espaco||!data||!inicio||!fim){ alert.classList.remove("show"); return false; }
-  const ni=timeToMin(inicio), nf=timeToMin(fim);
-  if(nf<=ni){ msg.textContent="O horário de término deve ser após o horário de início."; alert.classList.add("show"); return true; }
-  const fixas=getFixedForWeek(getWeekStart(new Date(data+"T12:00:00")));
-  const todas=[...fixas.filter(r=>r.data===data&&r.espaco===espaco),...allReservas.filter(r=>r.data===data&&r.espaco===espaco&&r.status!=="rejected")];
-  for(const r of todas){
-    const ri=timeToMin(r.inicio), rf=timeToMin(r.fim);
+  var esp=normEsp(document.getElementById("f_espaco").value);
+  var data=document.getElementById("f_data").value;
+  var ini=document.getElementById("f_inicio").value;
+  var fim=document.getElementById("f_fim").value;
+  var box=document.getElementById("conflictBox");
+  var msg=document.getElementById("conflictMsg");
+  if(!esp||!data||!ini||!fim){box.classList.remove("show");return false;}
+  var ni=t2m(ini),nf=t2m(fim);
+  if(nf<=ni){msg.textContent="O horario de termino deve ser apos o inicio.";box.classList.add("show");return true;}
+  var fixas=getFixas(getWeekStart(new Date(data+"T12:00:00")));
+  var todas=fixas.filter(function(r){return r.data===data&&r.espaco===esp;})
+    .concat(allReservas.filter(function(r){return r.data===data&&r.espaco===esp&&r.status!=="rejected";}));
+  for(var i=0;i<todas.length;i++){
+    var r=todas[i],ri=t2m(r.inicio),rf=t2m(r.fim);
     if(ni<rf&&nf>ri){
-      msg.innerHTML=`O espaço <strong>${document.getElementById("f_espaco").value}</strong> já está reservado das <strong>${r.inicio}</strong> às <strong>${r.fim}</strong> (${r.dept} — ${r.ativ||r.nome}). Escolha outro horário ou espaço.`;
-      alert.classList.add("show"); return true;
+      msg.innerHTML="Espaco <strong>"+document.getElementById("f_espaco").value+"</strong> ja reservado das <strong>"+r.inicio+"</strong> as <strong>"+r.fim+"</strong> ("+r.dept+" - "+(r.ativ||r.nome)+"). Escolha outro horario ou espaco.";
+      box.classList.add("show");return true;
     }
   }
-  alert.classList.remove("show"); return false;
+  box.classList.remove("show");return false;
 }
 
-async function submitReserva(){
-  const nome=document.getElementById("f_nome").value.trim();
-  const fone=document.getElementById("f_fone").value.trim();
-  const dept=document.getElementById("f_dept").value;
-  const ativ=document.getElementById("f_ativ").value;
-  const espaco=document.getElementById("f_espaco").value;
-  const data=document.getElementById("f_data").value;
-  const inicio=document.getElementById("f_inicio").value;
-  const fim=document.getElementById("f_fim").value;
-  const pessoas=document.getElementById("f_pessoas").value;
-  const obs=document.getElementById("f_obs").value.trim();
-  if(!nome||!fone||!dept||!ativ||!espaco||!data||!inicio||!fim){ showToast("error","Campos obrigatórios","Preencha todos os campos antes de enviar."); return; }
-  if(checkConflict()) return;
-  const id="res_"+Date.now();
-  allReservas.push({ id, tipo:"dynamic", status:"pending", nome, fone, dept, ativ, espaco:normalizeEspaco(espaco), espacoLabel:espaco, data, inicio, fim, pessoas:pessoas||"—", obs:obs||"—", criadoEm:new Date().toISOString() });
-  showLoading(true); await saveReservas(); showLoading(false);
-  renderAll(); closeModal();
-  ["f_nome","f_fone","f_dept","f_ativ","f_espaco","f_data","f_inicio","f_fim","f_pessoas","f_obs"].forEach(x=>{document.getElementById(x).value="";});
-  const dataFmt=formatDate(data);
-  const msg="*IASD Granja Viana* - NOVA SOLICITACAO DE RESERVA*\n--------------------\nSolicitante: "+nome+"\nWhatsApp: "+fone+"\nDepartamento: "+dept+"\nAtividade: "+ativ+"\nEspaco: "+espaco+"\nData: "+dataFmt+"\nHorario: "+inicio+" as "+fim+"\nPessoas: "+(pessoas||"-")+"\nObs: "+(obs||"-")+"\n--------------------\nGerenciar: https://wevertonbluebr.github.io/reservas-iasd/aprovar.html?id="+id;
-  window.open(`https://wa.me/${CONFIG.ADMIN_WHATSAPP}?text=${encodeURIComponent(msg)}`,"_blank");
-  showToast("success","⏳ Pré-reservado!","Solicitação enviada para aprovação. Aguarde o retorno da secretaria via WhatsApp.");
+function submitReserva(){
+  var nome=document.getElementById("f_nome").value.trim();
+  var fone=document.getElementById("f_fone").value.trim();
+  var dept=document.getElementById("f_dept").value;
+  var ativ=document.getElementById("f_ativ").value;
+  var espaco=document.getElementById("f_espaco").value;
+  var data=document.getElementById("f_data").value;
+  var ini=document.getElementById("f_inicio").value;
+  var fim=document.getElementById("f_fim").value;
+  var pessoas=document.getElementById("f_pessoas").value;
+  var obs=document.getElementById("f_obs").value.trim();
+  if(!nome||!fone||!dept||!ativ||!espaco||!data||!ini||!fim){showToast("error","Campos obrigatorios","Preencha todos os campos antes de enviar.");return;}
+  if(checkConflict())return;
+  var id="res_"+Date.now();
+  allReservas.push({id:id,tipo:"dynamic",status:"pending",nome:nome,fone:fone,dept:dept,ativ:ativ,espaco:normEsp(espaco),espacoLabel:espaco,data:data,inicio:ini,fim:fim,pessoas:pessoas||"-",obs:obs||"-",criadoEm:new Date().toISOString()});
+  showLoad(true);
+  saveData(function(){
+    showLoad(false);
+    renderAll();
+    closeModal();
+    ["f_nome","f_fone","f_dept","f_ativ","f_espaco","f_data","f_inicio","f_fim","f_pessoas","f_obs"].forEach(function(x){document.getElementById(x).value="";});
+    var dfmt=fmtDate(data);
+    var waMsg="*IASD Granja Viana*\nNOVA SOLICITACAO DE RESERVA\n--------------------\nSolicitante: "+nome+"\nWhatsApp: "+fone+"\nDepartamento: "+dept+"\nAtividade: "+ativ+"\nEspaco: "+espaco+"\nData: "+dfmt+"\nHorario: "+ini+" as "+fim+"\nPessoas: "+(pessoas||"-")+"\nObs: "+(obs||"-")+"\n--------------------\nGerenciar: https://wevertonbluebr.github.io/reservas-iasd/aprovar.html?id="+id;
+    window.open("https://wa.me/"+WA_ADMIN+"?text="+encodeURIComponent(waMsg),"_blank");
+    showToast("success","Pre-reservado!","Solicitacao enviada. Aguarde o retorno da secretaria via WhatsApp.");
+  });
 }
 
-// ═══════════════════════════════════════
-//  MODAL DETALHE
-// ═══════════════════════════════════════
-function showDetail(id,data){
-  let r=null;
-  if(id.startsWith("fix_")){
-    const fixas=getFixedForWeek(getWeekStart(new Date(data+"T12:00:00")));
-    r=fixas.find(f=>f.id===id&&f.data===data);
-  } else { r=allReservas.find(x=>x.id===id); }
-  if(!r) return;
-  document.getElementById("detailTitle").textContent=r.ativ||r.nome;
-  const bc=r.tipo==="fixed"?"sb-fixed":r.status==="approved"?"sb-approved":"sb-pending";
-  const bl=r.tipo==="fixed"?"🔒 Reserva Fixa":r.status==="approved"?"✅ Aprovada":"⏳ Aguardando aprovação";
-  document.getElementById("detailBadge").innerHTML=`<span class="status-badge ${bc}">${bl}</span>`;
-  const espacoLabel=r.espacoLabel||ESPACOS.find(e=>e.id===r.espaco)?.label||r.espaco;
-  let body=`
-    <div class="detail-row"><div class="detail-icon">👥</div><div><div class="detail-label">Departamento</div><div class="detail-val">${r.dept}</div></div></div>
-    <div class="detail-row"><div class="detail-icon">📍</div><div><div class="detail-label">Espaço</div><div class="detail-val">${espacoLabel}</div></div></div>
-    <div class="detail-row"><div class="detail-icon">📅</div><div><div class="detail-label">Data</div><div class="detail-val">${formatDate(r.data)}</div></div></div>
-    <div class="detail-row"><div class="detail-icon">⏰</div><div><div class="detail-label">Horário</div><div class="detail-val">${r.inicio} às ${r.fim}</div></div></div>`;
-  if(r.tipo!=="fixed"){ body+=`<div class="detail-row"><div class="detail-icon">👤</div><div><div class="detail-label">Solicitante</div><div class="detail-val">${r.nome||"—"}</div></div></div><div class="detail-row"><div class="detail-icon">👥</div><div><div class="detail-label">Nº de Pessoas</div><div class="detail-val">${r.pessoas||"—"}</div></div></div>`; }
-  if(r.obs&&r.obs!=="—"){ body+=`<div class="detail-row"><div class="detail-icon">💬</div><div><div class="detail-label">Observações</div><div class="detail-val">${r.obs}</div></div></div>`; }
-  if(r.tipo==="fixed"){ body+=`<div class="detail-row"><div class="detail-icon">🔄</div><div><div class="detail-label">Recorrência</div><div class="detail-val">${r.obs}</div></div></div>`; }
-  document.getElementById("detailBody").innerHTML=body;
-  document.getElementById("detailOverlay").classList.add("open");
+function showDet(id,data){
+  var r=null;
+  if(id.indexOf("fix")===0){var fx=getFixas(getWeekStart(new Date(data+"T12:00:00")));r=fx.filter(function(f){return f.id===id&&f.data===data;})[0];}
+  else{r=allReservas.filter(function(x){return x.id===id;})[0];}
+  if(!r)return;
+  document.getElementById("detTitle").textContent=r.ativ||r.nome;
+  var bc=r.tipo==="fixed"?"sbf":r.status==="approved"?"sba":"sbp";
+  var bl=r.tipo==="fixed"?"Reserva Fixa":r.status==="approved"?"Aprovada":"Aguardando aprovacao";
+  document.getElementById("detBadge").innerHTML='<span class="sbadge '+bc+'">'+bl+'</span>';
+  var espLbl=ESPACOS.filter(function(e){return e.id===r.espaco;})[0];
+  var eLbl=r.espacoLabel||(espLbl?espLbl.lbl:r.espaco);
+  var body='<div class="det-row"><div class="det-icon">&#128101;</div><div><div class="det-lbl">Departamento</div><div class="det-val">'+r.dept+'</div></div></div>';
+  body+='<div class="det-row"><div class="det-icon">&#128205;</div><div><div class="det-lbl">Espaco</div><div class="det-val">'+eLbl+'</div></div></div>';
+  body+='<div class="det-row"><div class="det-icon">&#128197;</div><div><div class="det-lbl">Data</div><div class="det-val">'+fmtDate(r.data)+'</div></div></div>';
+  body+='<div class="det-row"><div class="det-icon">&#9200;</div><div><div class="det-lbl">Horario</div><div class="det-val">'+r.inicio+' as '+r.fim+'</div></div></div>';
+  if(r.tipo!=="fixed"){body+='<div class="det-row"><div class="det-icon">&#128100;</div><div><div class="det-lbl">Solicitante</div><div class="det-val">'+r.nome+'</div></div></div>';}
+  if(r.obs&&r.obs!=="-"){body+='<div class="det-row"><div class="det-icon">&#128172;</div><div><div class="det-lbl">Observacoes</div><div class="det-val">'+r.obs+'</div></div></div>';}
+  document.getElementById("detBody").innerHTML=body;
+  
+  document.getElementById("detOv").classList.add("open");
 }
-function closeDetail(){ document.getElementById("detailOverlay").classList.remove("open"); }
+function closeDetail(){
+  var el=
+  if(el)el.classList.remove("open");
+}
+document.getElementById("modalOv").addEventListener("click",function(e){if(e.target===this)closeModal();});
 
-document.getElementById("modalOverlay").addEventListener("click",function(e){if(e.target===this)closeModal();});
-document.getElementById("detailOverlay").addEventListener("click",function(e){if(e.target===this)closeDetail();});
-
-// INIT
-loadReservas();
+loadData();
 </script>
 </body>
 </html>
